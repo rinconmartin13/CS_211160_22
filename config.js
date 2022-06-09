@@ -1,12 +1,10 @@
-module.exports = {
-    api: {
-        port: process.env.API_PORT || 3000
-    },
-    db: {
-        user: 'postgres',
-        host: 'localhost',
-        database: 'CSDB',
-        password: 'rinconnn13',
-        port: '5432'
-    }
-}
+export const api = {
+    port: process.env.API_PORT || 4000
+};
+export const db = {
+    user: 'postgres',
+    host: 'localhost',
+    database: 'CSDB',
+    password: '12345',
+    port: '5432'
+};
