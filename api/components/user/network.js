@@ -1,33 +1,63 @@
-const express = require('express');
-const response = require("../../../network/response");
-const { getConnection } = require('../../../model/db');
+import { Router } from 'express';
+import { success  } from '../../../network/response.js';
+import {getData} from '../../../model/db.js';
+import {getUser} from '../../../model/Users.js'
 
-const router = express.Router();
+const router = Router();
+
 
 router.get('/success', function (req, res) {
-    response.success(req, res, "", 200);
+    success(req, res, "", 200);
+
 });
 
-router.post('/login', function (req, res) {
+router.get('/readme', async function (req, res) {
+    const client = await getConnection();
 
-    console.log(req.query);
-    console.log(req.query.userName);
-    console.log(req.query.password)
-
-    let userName = req.query.userName;
-    let password = req.query.password;
-
-    res.send({
-        token: '',
-        id_user: '13',
-        success: 'OK'
+    const query_request = {
+        text: 'SELECT * FROM tbl_usersdb'
+    }
+    client.query(query_request, (err, result) => {
+        res.send(result.rows);
     });
-    console.log(req.query);
+});
+
+
+router.delete('/delete', async function (req, res) {
+    const client = await getConnection();
+    let id = req.query.id;
+
+    const query_request = {
+        text: `DELETE FROM tbl_usersdb WHERE id = ${id}`,
+    };
+
+    client.query(query_request)
+        .then(r => { console.log('1'); success(req, res, r, 200); })
+        .catch(e => { console.log('2'); success(req, res, e.stack, 400); })
+});
+
+router.put('/update', async function (req, res) {
+    const client = await getConnection();
+    let id = req.query.id;
+    let username = req.query.username;
+    let email = req.query.email;
+    let password = req.query.password;
+    let phone_number = req.query.phone_number;
+
+    const query_request = {
+
+        text: `UPDATE  tbl_usersdb SET username= '${username}', email= '${email}', password= '${password}', phone_number= '${phone_number}' WHERE id= '${id}'`
+
+    };
+
+    client.query(query_request)
+        .then(r => { console.log('1'); success(req, res, r, 200); })
+        .catch(e => { console.log('2'); success(req, res, e.stack, 400); })
 });
 
 router.post('/register', async function (req, res) {
-    // Realizar conexion a db
-    console.log('-------register------');
+    //Realizar conexion a DB
+    console.log('register');
     const client = await getConnection();
 
     let username = req.query.username;
@@ -36,23 +66,36 @@ router.post('/register', async function (req, res) {
     let phone_number = req.query.phone_number;
 
     const query_request = {
-        text: 'INSERT INTO tbl_usersdb(username, email, password, phone_number) VALUES($1, $2, $3, $4)',
+        text: 'INSERT INTO tbl_usersdb(username, email, password, phone_number) VALUES ($1, $2, $3, $4)',
         values: [username, email, password, phone_number]
     };
 
     client.query(query_request)
-        .then(r => { console.log('Se guardo correctamente los datos'); response.success(req, res, r, 200); })
-        .catch(e => { console.log('No se guardaron los datos'); response.success(req, res, e.detail, 200); })
+        .then(r => { console.log('1'); success(req, res, r, 200); })
+        .catch(e => { console.log('2'); success(req, res, e.stack, 200); })
 });
 
-module.exports = router;
+router.post('/login', function (req, res) {
 
-/*definicion: 
+    let userName = req.query.userName;
+    let pasword = req.query.pasword;
 
-un promise "promesa " es un objeto que representa la terminacion o fracaso de una operacion asincrona.
-esencialmente una promesa es un objeto devuelto al cual se apuntan funciones
+    res.send({
+        token: "",
+        id_user: "1",
+        success: "exito",
+    });
+});
 
-investigar callback
-*/
-///
+router.get('/all_users_orm', async function (req, res){
+    getUser.findAll({attributes: ['username', 'email', 'password', 'phone_number']})
+    .then(users => {
+        res.send(users)
+    })
+    .catch(err => {
+        console.log(err)
+    })
+})
 
+
+export default router;

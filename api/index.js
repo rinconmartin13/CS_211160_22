@@ -1,9 +1,9 @@
-const express = require('express');
-const { status } = require('express/lib/response');
+import express from 'express';
+// import { status } from 'express/lib/response';
 
-const config = require('../config.js');
+import { api } from '../config.js';
 
-const user = require('./components/user/network')
+import user from './components/user/network.js';
 
 const app = express();
 
@@ -11,6 +11,6 @@ const app = express();
 app.use('/api/user', user);
 
 //SERVIDOR ACTIVO
-app.listen(config.api.port, () => {
-    console.log('servidor corriendo en el puerto => ', config.api.port)
+app.listen(api.port, () => {
+    console.log('servidor corriendo en el puerto => ', api.port)
 });
