@@ -1,57 +1,74 @@
-import { Router } from 'express';
-import { success  } from '../../../network/response.js';
-import {getData} from '../../../model/db.js';
-import {getUser} from '../../../model/Users.js'
+import { Router } from "express";
+import { success } from "../../../network/response.js";
+import { getData } from "../../../model/db.js";
+import { getUser } from "../../../model/Users.js";
 
 const router = Router();
 
-
-const user = getUser.build({ attributes: ['id', 'username', 'email', 'password', 'phone_number'] });
+const user = getUser.build({
+  attributes: ["id", "username", "email", "password", "phone_number"],
+});
 console.log(user instanceof getUser); // true
 console.log(user.name);
 
-
-router.get('/success', function (req, res) {
-    success(req, res, "", 200);
-
+router.get("/success", function (req, res) {
+  success(req, res, "", 200);
 });
 
-
-router.get('/list', async function (req, res) {
-    getUser.findAll({ attributes: ['username', 'email', 'password', 'phone_number'] })
-        .then(users => {
-            res.send(users)
-        })
-        .catch(err => {
-            console.log(err)
-        });
-})
-
-router.post('/add', async function (req, res) {
-    getUser.create({ username: req.query.username, email: req.query.email, password: req.query.password, phone_number: req.query.phone_number });
-})
-
-router.put('/update', async function(req,res){
-
-    let id= req.query.id;
-    let newDatas=req.query;
-
-    getUser.findOne({where:{id:id}})
-    .then((r) => {
-      r.update(newDatas)
-      success(req, res, r, 200);
+router.get("/list", async function (req, res) {
+  getUser
+    .findAll({
+      attributes: ["id", "username", "email", "password", "phone_number"],
     })
-    .catch((e) => {
-      success(req, res, e, 400);
+    .then((users) => {
+      res.send(users);
+    })
+    .catch((err) => {
+      console.log(err);
     });
-})
+});
 
-router.delete('/delete', async function (req, res) {
-    await getUser.destroy({
-        where: {
-            id: req.query.id
-        }
+router.post("/add", async function (req, res) {
+  getUser
+    .create({
+      id: req.query.id,
+      username: req.query.username,
+      email: req.query.email,
+      password: req.query.password,
+      phone_number: req.query.phone_number,
+    })
+    .then((users) => {
+      res.send(users);
+    })
+    .catch((err) => {
+      console.log(err);
     });
-})
+});
+
+router.put("/update/:id", (req, res) => {
+  const id = req.params.id;
+  const updates = req.query;
+  getUser
+    .findOne({
+      where: { id: id },
+    })
+    .then((del) => {
+      return del.update(updates);
+    })
+    .then((updated) => {
+      res.json(updated);
+    });
+});
+
+router.delete("/delete/:id", (req, res) => {
+  const id = req.params.id;
+  getUser
+    .destroy({
+      where: { id: id },
+    })
+    .then((deleted) => {
+      res.json(deleted);
+    });
+});
 
 export default router;

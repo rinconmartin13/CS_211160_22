@@ -6,9 +6,11 @@ const User = getData.sequelizeClient.define('tbl_usersdb', {
     username: Sequelize.STRING,
     email: Sequelize.STRING,
     password: Sequelize.STRING,
-     phone_number: Sequelize.STRING,
+    phone_number: Sequelize.STRING,
 },{
-    tableName: 'tbl_usersdb'
+    tableName: 'tbl_usersdb',
+    createdAt: false,
+    updatedAt: false
 });
 
 export const getUser = User;
