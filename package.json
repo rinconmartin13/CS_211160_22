@@ -2,19 +2,32 @@
   "name": "practica_express",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start:dev": "cross-env NODE_ENV=development nodemon app.js",
+    "start:test": "cross-env NODE_ENV=test nodemon app.js",
+    "start:prod": "cross-env NODE_ENV=production nodemon app.js",
+    "sequelize": "dotenv sequelize",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
   },
   "author": "Martin",
   "license": "MIT",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "pg": "^8.7.3",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.20.1",
-    "socket.io": "^4.5.0"
+    "socket.io": "^4.5.0",
+    "uuid": "^8.3.2"
+  },
+  "engines": {
+    "node": "16.15.0"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3"
   }
 }

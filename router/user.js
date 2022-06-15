@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { success } from "../../../network/response.js";
-import { getData } from "../../../model/db.js";
-import { getUser } from "../../../model/Users.js";
+import { success } from "./response.js";
+import { getData } from "../models/db.js";
+import { getUser } from "../models/Users.js";
 
 const router = Router();
 
@@ -18,7 +18,7 @@ router.get("/success", function (req, res) {
 router.get("/list", async function (req, res) {
   getUser
     .findAll({
-      attributes: ["id", "username", "email", "password", "phone_number"],
+      exclude: [],
     })
     .then((users) => {
       res.send(users);
@@ -31,7 +31,6 @@ router.get("/list", async function (req, res) {
 router.post("/add", async function (req, res) {
   getUser
     .create({
-      id: req.query.id,
       username: req.query.username,
       email: req.query.email,
       password: req.query.password,

@@ -1,9 +1,9 @@
 import express from 'express';
 // import { status } from 'express/lib/response';
 
-import { api } from '../config.js';
+import { api } from './config/config.js';
 
-import user from './components/user/network.js';
+import user from './router/user.js';
 
 const app = express();
 
